@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Becas — Trabajadora Social</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app" style="display:block">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div id="sb-avatar" class="sidebar-avatar social">TS</div>
+      <div class="nombre-app">Sistema de Becas</div>
+      <div class="nombre-rol" id="sb-rolename">Trabajadora Social</div>
+    </div>
+    <div class="nav-seccion" id="nav-items"></div>
+    <div class="sidebar-footer">
+      <button class="boton-salir" onclick="window.location.href='index.html'">
+        <span></span> Cerrar sesión
+      </button>
+    </div>
+  </aside>
+  <main class="main" id="main-content"></main>
+</div>
+
+<div class="modal-fondo" id="modal-fondo">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-titulo" id="modal-titulo"></div>
+      <button class="boton-cerrar" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const NAV_ITEMS = [
+  { id: 'panel-s', label: 'Panel principal' },
+  { id: 'periodos', label: 'Periodos' },
+  { id: 'verificacion', label: 'Verificar documentos' },
+  { id: 'aprobacion', label: 'Aprobación / Denegación' },
+  { id: 'noticias', label: 'Noticias' },
+];
+
+function buildNav() {
+  const nav = document.getElementById('nav-items');
+  nav.innerHTML = `<div class="nav-etiqueta">Menú</div>` +
+    NAV_ITEMS.map(n =>
+      `<div class="nav-item" id="nav-${n.id}" onclick="navigate('${n.id}')">${n.label}</div>`
+    ).join('');
+}
+
+function navigate(id) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  document.querySelectorAll('.pagina').forEach(p => p.classList.remove('active'));
+  const pagina = document.getElementById('page-' + id);
+  if (pagina) pagina.classList.add('active');
+}
+
+function openModal(title, html) {
+  document.getElementById('modal-titulo').textContent = title;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-fondo').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-fondo').classList.remove('open'); }
+
+/* PAGINAS DE TRABAJADORA SOCIAL*/
+
+function pagePanelSocial() {
+  return `<div class="pagina" id="page-panel-s"> <div class="pagina-header"> <h1>Panel de trabajo</h1> <p>Resumen de actividad — Periodo actual</p> </div> <div class="grid-4" style="margin-bottom:24px"> <div class="tarjeta-stat"><div class="stat-etiqueta">Solicitudes activas</div><div class="stat-valor">0</div><div class="stat-sub">+8 esta semana</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Pendientes de revisión</div><div class="stat-valor" style="color:var(--warning)">0</div><div class="stat-sub">Requieren acción</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Aprobadas este mes</div><div class="stat-valor" style="color:var(--success)">0</div><div class="stat-sub">Tasa aprobación 71%</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Denegadas este mes</div><div class="stat-valor" style="color:var(--danger)">0</div><div class="stat-sub">29% del total</div></div> </div> <div class="grid-2"> <div class="tarjeta"> <div class="tarjeta-header"><div class="tarjeta-titulo">Solicitudes recientes</div><button class="boton boton-sm boton-contorno" onclick="navigate('aprobacion')">Ver todas</button></div> <div class="tabla-wrap"> <table> <thead><tr><th>Estudiante</th><th>Tipo</th><th>Estado</th></tr></thead> <tbody> <tr><td>Nombre Apellido</td><td>Socioeconómica</td><td><span class="insignia insignia-amarilla">Revisión</span></td></tr> <tr><td>Nombre Apellido</td><td>Excelencia</td><td><span class="insignia insignia-azul">Evaluación</span></td></tr> <tr><td>Nombre Apellido</td><td>Discapacidad</td><td><span class="insignia insignia-amarilla">Docs pendientes</span></td></tr> <tr><td>Nombre Apellido</td><td>Socioeconómica</td><td><span class="insignia insignia-verde">Aprobada</span></td></tr> <tr><td>Nombre Apellido</td><td>Deportiva</td><td><span class="insignia insignia-roja">Denegada</span></td></tr> </tbody> </table> </div> </div> <div class="tarjeta"> <div class="tarjeta-header"><div class="tarjeta-titulo">Estado del periodo actual</div></div> <div class="interruptor-box" style="margin-bottom:12px"> <div><div style="font-size:14px;font-weight:500">Nombre de la convocatoria</div><div style="font-size:12px;color:var(--gray-500)">Cierra fecha</div></div> <label class="interruptor"><input type="checkbox" checked><span class="interruptor-slider"></span></label> </div> <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px"> <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Cupos disponibles</span><strong>0 / 0</strong></div> <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Solicitudes recibidas</span><strong>47</strong></div> <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Días para cierre</span><strong style="color:var(--warning)">0 días</strong></div> </div> <hr class="separador"> <div class="tarjeta-titulo" style="margin-bottom:12px;font-size:14px">Actividad de hoy</div> <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--gray-600)"> <div> Aprobó beca de Nombre Apellido</div> <div> Revisó docs de Nombre Apellido</div> <div> Solicitó corrección a Nombre Apellido</div> <div> Publicó noticia de convocatoria</div> </div> </div> </div>
+</div>`;
+}
+
+function pagePeriodos() {
+  return `<div class="pagina" id="page-periodos"> <div class="pagina-header"> <h1>Gestión de periodos</h1> <p>Abre, configura y cierra periodos de convocatoria de becas</p> </div> <div style="display:flex;gap:12px;margin-bottom:20px"> <button class="boton boton-primario" onclick="openModal('Abrir nuevo periodo', modalNuevoPeriodo())"> Nuevo periodo</button> </div> <div class="tarjeta" style="margin-bottom:16px"> <div class="tarjeta-header"><div class="tarjeta-titulo">Periodo activo</div><span class="insignia insignia-verde"> Abierto</span></div> <div class="grid-2" style="margin-bottom:16px"> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Nombre</div><div style="font-size:15px;font-weight:600">Nombre de la convocatoria</div></div> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Tipo de beca</div><div style="font-size:15px;font-weight:600">Múltiple</div></div> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Apertura</div><div>fecha</div></div> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Cierre de recepción</div><div style="color:var(--warning);font-weight:500">fecha</div></div> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Cupos totales</div><div>0</div></div> <div><div style="font-size:12px;color:var(--gray-500);margin-bottom:4px">Solicitudes recibidas</div><div><strong>0</strong></div></div> </div> <div style="margin-bottom:12px"> <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Cupos ocupados</span><span>0 / 0</span></div> <div class="barra-progreso"><div class="barra-progreso-relleno" style="width:0%;background:var(--warning)"></div></div> </div> <div class="interruptor-box"> <div><div style="font-weight:500;font-size:14px">Estado del periodo</div><div style="font-size:12px;color:var(--gray-500)">Desactivar cerrará la recepción de nuevas solicitudes</div></div> <label class="interruptor"><input type="checkbox" checked onchange="if(!this.checked)openModal('Confirmar cierre','<p style=\'margin-bottom:16px\'>¿Está segura de que desea <strong>cerrar</strong> el periodo de convocatoria? No se aceptarán más solicitudes.</p><div style=\'display:flex;gap:10px\'><button class=\'boton boton-peligro\' onclick=\'closeModal()\'>Sí, cerrar</button><button class=\'boton boton-contorno\' onclick=\'closeModal()\'>Cancelar</button></div>')"><span class="interruptor-slider"></span></label> </div> </div> <div class="tarjeta"> <div class="tarjeta-header"><div class="tarjeta-titulo">Historial de periodos</div></div> <div class="tabla-wrap"> <table> <thead><tr><th>Periodo</th><th>Apertura</th><th>Cierre</th><th>Solicitudes</th><th>Becas asignadas</th><th>Estado</th></tr></thead> <tbody> <tr><td>Periodo</td><td>fecha</td><td>fecha</td><td>0</td><td>0</td><td><span class="insignia insignia-gris">Cerrado</span></td></tr> <tr><td>Periodo</td><td>fecha</td><td>fecha</td><td>0</td><td>0</td><td><span class="insignia insignia-gris">Cerrado</span></td></tr> <tr><td>Periodo</td><td>fecha</td><td>fecha</td><td>0</td><td>0</td><td><span class="insignia insignia-gris">Cerrado</span></td></tr> </tbody> </table> </div> </div>
+</div>`;
+}
+
+function modalNuevoPeriodo() {
+  return `<div> <div class="grupo-formulario"><label>Nombre del periodo</label><input type="text" placeholder="Ej: I Semestre 2027"></div> <div class="grid-2"> <div class="grupo-formulario"><label>Fecha de apertura</label><input type="date"></div> <div class="grupo-formulario"><label>Fecha de cierre</label><input type="date"></div> </div> <div class="grupo-formulario"><label>Cupos totales</label><input type="number" placeholder="60"></div> <div class="grupo-formulario"><label>Tipos de beca disponibles</label> <select> <option>Todos los tipos</option> <option>Solo socioeconómica</option> <option>Socioeconómica y excelencia</option> </select> </div> <div class="grupo-formulario"><label>Requisito de promedio mínimo</label><input type="number" value="80"></div> <div style="display:flex;gap:10px;margin-top:8px"> <button class="boton boton-primario" onclick="closeModal()"> Crear periodo</button> <button class="boton boton-contorno" onclick="closeModal()">Cancelar</button> </div> </div>`;
+}
+
+function pageVerificacion() {
+  return `<div class="pagina" id="page-verificacion"> <div class="pagina-header"> <h1>Verificación de documentos</h1> <p>Revisa y valida los documentos de cada solicitud</p> </div> <div class="tarjeta" style="margin-bottom:16px"> <div class="tarjeta-header" style="flex-wrap:wrap;gap:12px"> <div class="tarjeta-titulo">Expedientes por verificar</div> <div style="display:flex;gap:8px;flex-wrap:wrap"> <select style="width:auto"><option>Todos los estados</option><option>Pendiente</option><option>Subsanar</option></select> <input type="text" placeholder="Buscar estudiante..." style="width:200px"> </div> </div> <div class="tabla-wrap"> <table> <thead><tr><th>Estudiante</th><th>Carné</th><th>Tipo de beca</th><th>Docs. completos</th><th>Estado</th><th>Acciones</th></tr></thead> <tbody> <tr> <td><strong>Nombre Apellido Apellido</strong></td><td>0000-0000</td><td>Socioeconómica</td> <td><div class="barra-progreso" style="width:100px"><div class="barra-progreso-relleno" style="width:0%;background:var(--warning)"></div></div><span style="font-size:12px;margin-left:6px">0/0</span></td> <td><span class="insignia insignia-amarilla">Pendiente</span></td> <td><button class="boton boton-sm boton-primario" onclick="openModal('Expediente: Nombre Apellido', modalExpedienteVerif())">Revisar</button></td> </tr> <tr> <td><strong>Nombre Apellido Apellido</strong></td><td>0000-0000</td><td>Excelencia académica</td> <td><div class="barra-progreso" style="width:100px"><div class="barra-progreso-relleno" style="width:100%"></div></div><span style="font-size:12px;margin-left:6px">0/0</span></td> <td><span class="insignia insignia-azul">En evaluación</span></td> <td><button class="boton boton-sm boton-contorno" onclick="openModal('Expediente: Nombre Apellido', modalExpedienteVerif())">Revisar</button></td> </tr> <tr> <td><strong>Nombre Apellido Apellido</strong></td><td>0000-0000</td><td>Discapacidad</td> <td><div class="barra-progreso" style="width:100px"><div class="barra-progreso-relleno" style="width:0%;background:var(--danger)"></div></div><span style="font-size:12px;margin-left:6px">0/0</span></td> <td><span class="insignia insignia-roja">Subsanar</span></td> <td><button class="boton boton-sm boton-contorno" onclick="openModal('Expediente: Nombre Apellido', modalExpedienteVerif())">Revisar</button></td> </tr> </tbody> </table> </div> </div>
+</div>`;
+}
+
+function modalExpedienteVerif() {
+  return `<div> <div class="alerta alerta-info"><span>ℹ</span><div>Solicitud de beca socioeconómica — Periodo actual</div></div> <div style="margin-bottom:16px"> <div class="doc-fila"><div class="doc-icono"></div><div class="doc-nombre">Cédula de identidad</div><span class="insignia insignia-verde"> OK</span><div class="doc-acciones"><button class="boton boton-sm boton-contorno">Ver</button></div></div> <div class="doc-fila"><div class="doc-icono"></div><div class="doc-nombre">Constancia salarial</div><span class="insignia insignia-verde"> OK</span><div class="doc-acciones"><button class="boton boton-sm boton-contorno">Ver</button></div></div> <div class="doc-fila"><div class="doc-icono"></div><div class="doc-nombre">Historial académico</div><span class="insignia insignia-verde"> OK</span><div class="doc-acciones"><button class="boton boton-sm boton-contorno">Ver</button></div></div> <div class="doc-fila"><div class="doc-icono"></div><div class="doc-nombre">Recibo de servicios</div><span class="insignia insignia-amarilla"> Ilegible</span><div class="doc-acciones"><button class="boton boton-sm boton-contorno">Ver</button></div></div> <div class="doc-fila"><div class="doc-icono"></div><div class="doc-nombre">Orden patronal</div><span class="insignia insignia-roja"> Faltante</span></div> </div> <div class="grupo-formulario"><label>Observaciones para el estudiante</label><textarea placeholder="Indique qué documentos debe corregir o subir..."></textarea></div> <div style="display:flex;gap:10px"> <button class="boton boton-exito" onclick="closeModal()"> Marcar elegible</button> <button class="boton boton-contorno" onclick="closeModal()"> Solicitar corrección</button> <button class="boton boton-peligro boton-sm" onclick="closeModal()">Rechazar</button> </div> </div>`;
+}
+
+function pageAprobacion() {
+  return `<div class="pagina" id="page-aprobacion"> <div class="pagina-header"> <h1>Aprobación y denegación</h1> <p>Toma decisiones sobre las solicitudes de beca</p> </div> <div class="grid-4" style="margin-bottom:20px"> <div class="tarjeta-stat"><div class="stat-etiqueta">En comité</div><div class="stat-valor">0</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Lista de espera</div><div class="stat-valor" style="color:var(--warning)">0</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Aprobadas hoy</div><div class="stat-valor" style="color:var(--success)">0</div></div> <div class="tarjeta-stat"><div class="stat-etiqueta">Denegadas hoy</div><div class="stat-valor" style="color:var(--danger)">0</div></div> </div> <div class="tarjeta"> <div class="tarjeta-header" style="flex-wrap:wrap;gap:10px"> <div class="tarjeta-titulo">Solicitudes elegibles — pendientes de decisión</div> <div style="display:flex;gap:8px"><select style="width:auto"><option>Ordenar por puntaje</option><option>Por fecha</option><option>Por tipo</option></select></div> </div> <div class="tabla-wrap"> <table> <thead><tr><th>#</th><th>Estudiante</th><th>Tipo de beca</th><th>Puntaje</th><th>Recomendación</th><th>Decisión</th></tr></thead> <tbody> <tr> <td>1</td><td><strong>Nombre Apellido Apellido</strong><br><span style="font-size:12px;color:var(--gray-400)">Promedio: 0 | IC: ₡0</span></td> <td>Socioeconómica</td><td><strong style="color:var(--success)">0.0</strong></td> <td><span class="insignia insignia-verde">Aprobar 75%</span></td> <td> <div style="display:flex;gap:6px"> <button class="boton boton-sm boton-exito" onclick="openModal('Aprobar beca', modalAprobar('Nombre Apellido'))"> Aprobar</button> <button class="boton boton-sm boton-peligro" onclick="openModal('Denegar beca', modalDenegar('Nombre Apellido'))"> Denegar</button> </div> </td> </tr> <tr> <td>2</td><td><strong>Nombre Apellido Apellido</strong><br><span style="font-size:12px;color:var(--gray-400)">Promedio: 0</span></td> <td>Excelencia académica</td><td><strong style="color:var(--success)">0.0</strong></td> <td><span class="insignia insignia-verde">Aprobar 50%</span></td> <td> <div style="display:flex;gap:6px"> <button class="boton boton-sm boton-exito" onclick="openModal('Aprobar beca', modalAprobar('Nombre Apellido'))"> Aprobar</button> <button class="boton boton-sm boton-peligro" onclick="openModal('Denegar beca', modalDenegar('Nombre Apellido'))"> Denegar</button> </div> </td> </tr> <tr> <td>3</td><td><strong>Nombre Apellido Apellido</strong><br><span style="font-size:12px;color:var(--gray-400)">Promedio: 0 | IC: ₡0</span></td> <td>Socioeconómica</td><td><strong style="color:var(--warning)">0.0</strong></td> <td><span class="insignia insignia-amarilla">Lista espera</span></td> <td> <div style="display:flex;gap:6px"> <button class="boton boton-sm boton-exito" onclick="openModal('Aprobar beca', modalAprobar('Nombre Apellido'))"> Aprobar</button> <button class="boton boton-sm boton-peligro" onclick="openModal('Denegar beca', modalDenegar('Nombre Apellido'))"> Denegar</button> </div> </td> </tr> <tr> <td>4</td><td><strong>Nombre Apellido Apellido</strong><br><span style="font-size:12px;color:var(--gray-400)">Promedio: 0 | IC: ₡0</span></td> <td>Deportiva</td><td><strong style="color:var(--danger)">0.0</strong></td> <td><span class="insignia insignia-roja">Denegar</span></td> <td> <div style="display:flex;gap:6px"> <button class="boton boton-sm boton-exito" onclick="openModal('Aprobar beca', modalAprobar('Nombre Apellido'))"> Aprobar</button> <button class="boton boton-sm boton-peligro" onclick="openModal('Denegar beca', modalDenegar('Nombre Apellido'))"> Denegar</button> </div> </td> </tr> </tbody> </table> </div> </div>
+</div>`;
+}
+
+function modalAprobar(nombre) {
+  return `<div> <div class="alerta alerta-exito"><span></span><div>Está a punto de aprobar la beca de <strong>${nombre}</strong></div></div> <div class="grupo-formulario"><label>Porcentaje de cobertura</label> <select><option>25%</option><option>50%</option><option selected>75%</option><option>100%</option></select> </div> <div class="grupo-formulario"><label>Rubros cubiertos</label> <select><option>Matrícula y aranceles</option><option>Matrícula, aranceles y alimentación</option><option>Cobertura total</option></select> </div> <div class="grupo-formulario"><label>Vigencia</label> <select><option>I Semestre 2027</option><option>Periodo actual</option></select> </div> <div class="grupo-formulario"><label>Condiciones especiales (opcional)</label><textarea placeholder="Ej: Mantener promedio mínimo de 82..."></textarea></div> <div style="display:flex;gap:10px;margin-top:8px"> <button class="boton boton-exito" onclick="closeModal()"> Confirmar aprobación</button> <button class="boton boton-contorno" onclick="closeModal()">Cancelar</button> </div> </div>`;
+}
+
+function modalDenegar(nombre) {
+  return `<div> <div class="alerta alerta-peligro"><span></span><div>Está a punto de <strong>denegar</strong> la beca de <strong>${nombre}</strong></div></div> <div class="grupo-formulario"><label>Motivo de denegación</label> <select><option>No cumple promedio mínimo</option><option>Ingresos superiores al umbral</option><option>Documentos incompletos</option><option>Cupos agotados</option><option>Otro motivo</option></select> </div> <div class="grupo-formulario"><label>Detalle de la resolución</label><textarea placeholder="Explique el motivo de la denegación para comunicárselo al estudiante..."></textarea></div> <div class="grupo-formulario"> <label><input type="checkbox"> Agregar automáticamente a lista de espera si hay cupos disponibles</label> </div> <div style="display:flex;gap:10px;margin-top:8px"> <button class="boton boton-peligro" onclick="closeModal()"> Confirmar denegación</button> <button class="boton boton-contorno" onclick="closeModal()">Cancelar</button> </div> </div>`;
+}
+
+function pageNoticias() {
+  return `<div class="pagina" id="page-noticias"> <div class="pagina-header"> <h1>Noticias y comunicados</h1> <p>Publica información para los becados y la comunidad universitaria</p> </div> <div style="display:flex;gap:12px;margin-bottom:20px"> <button class="boton boton-primario" onclick="openModal('Nueva noticia', modalNuevaNoticia())"> Publicar noticia</button> </div> <div class="grid-2" style="margin-bottom:24px"> <div class="tarjeta"> <div class="tarjeta-header"><div class="tarjeta-titulo">Publicaciones activas</div><span class="insignia insignia-verde">5 activas</span></div> <div style="display:flex;flex-direction:column;gap:10px"> ${noticiaItem('', 'Plazo de renovación de becas', 'Institucional', 'fecha', 'insignia-azul')}
+        ${noticiaItem('', 'Nuevas becas de investigación disponibles', 'Convocatoria', 'fecha', 'insignia-verde')}
+        ${noticiaItem('', 'Actualización de reglamento de becas', 'Reglamentario', 'fecha', 'insignia-amarilla')}
+        ${noticiaItem('', 'Resultados Periodo publicados', 'Resultados', 'fecha', 'insignia-azul')}
+      </div> </div> <div class="tarjeta"> <div class="tarjeta-header"><div class="tarjeta-titulo">Previsualización para becados</div></div> <div style="display:grid;gap:12px"> <div class="noticia-tarjeta"> <div class="noticia-img"></div> <div class="noticia-cuerpo"> <div class="noticia-categoria">Institucional</div> <div class="noticia-titulo">Plazo de renovación de becas vence el 10 de agosto</div> <div class="noticia-fecha">10 julio 2026</div> </div> </div> <div class="noticia-tarjeta"> <div class="noticia-img" style="background:linear-gradient(135deg,var(--success-light),#a7f3d0)"></div> <div class="noticia-cuerpo"> <div class="noticia-categoria">Convocatoria</div> <div class="noticia-titulo">Nuevas becas de investigación disponibles para posgrado</div> <div class="noticia-fecha">5 julio 2026</div> </div> </div> </div> </div> </div>
+</div>`;
+}
+
+function noticiaItem(icon, title, cat, date, badgeClass) {
+  return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100)"> <div style="font-size:22px;width:36px;text-align:center">${icon}</div> <div style="flex:1"><div style="font-size:13.5px;font-weight:500">${title}</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">${date}</div></div> <span class="insignia ${badgeClass}" style="font-size:11px">${cat}</span> <button class="boton boton-sm boton-contorno">Editar</button> </div>`;
+}
+
+function modalNuevaNoticia() {
+  return `<div> <div class="grupo-formulario"><label>Título</label><input type="text" placeholder="Ej: Apertura de convocatoria II Semestre 2027"></div> <div class="grupo-formulario"><label>Categoría</label> <select><option>Institucional</option><option>Convocatoria</option><option>Resultados</option><option>Reglamentario</option><option>Urgente</option></select> </div> <div class="grupo-formulario"><label>Fecha de publicación</label><input type="date"></div> <div class="grupo-formulario"><label>Contenido</label><textarea style="min-height:120px" placeholder="Escribe el contenido del comunicado..."></textarea></div> <div class="grupo-formulario"><label>Imagen destacada (opcional)</label> <div style="border:2px dashed var(--gray-300);border-radius:8px;padding:20px;text-align:center;cursor:pointer;color:var(--gray-500)"> <div style="font-size:24px;margin-bottom:6px"></div><div style="font-size:13px">Subir imagen</div> </div> </div> <div class="grupo-formulario"><label><input type="checkbox" checked> Notificar a todos los becados por correo</label></div> <div style="display:flex;gap:10px;margin-top:8px"> <button class="boton boton-primario" onclick="closeModal()"> Publicar</button> <button class="boton boton-contorno" onclick="closeModal()">Guardar borrador</button> <button class="boton boton-contorno" onclick="closeModal()">Cancelar</button> </div> </div>`;
+}
+
+
+document.getElementById('main-content').innerHTML = pagePanelSocial() + pagePeriodos() + pageVerificacion() + pageAprobacion() + pageNoticias();
+buildNav();
+navigate(NAV_ITEMS[0].id);
+</script>
+</body>
+</html>
